@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Crear cuenta — Ferretería Dani{% endblock %}
+
+{% block body %}
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+
+            <div class="card profile-card">
+                <div class="card-body p-4 p-md-5">
+
+                    <div class="text-center mb-4">
+                        <i class="bi bi-person-plus display-4 text-warning"></i>
+                        <h1 class="h3 fw-bold mt-2">Crear cuenta</h1>
+                        <p class="text-muted">Regístrate para acceder a todas las funciones</p>
+                    </div>
+
+                    {{ form_start(registrationForm, {attr: {novalidate: 'novalidate'}}) }}
+
+                        <div class="mb-3">
+                            <label for="{{ registrationForm.email.vars.id }}" class="form-label fw-semibold">
+                                <i class="bi bi-envelope me-1"></i>Email
+                            </label>
+                            {{ form_widget(registrationForm.email) }}
+                            {{ form_errors(registrationForm.email) }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ registrationForm.plainPassword.first.vars.id }}" class="form-label fw-semibold">
+                                <i class="bi bi-lock me-1"></i>Contraseña
+                            </label>
+                            {{ form_widget(registrationForm.plainPassword.first) }}
+                            {{ form_errors(registrationForm.plainPassword.first) }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="{{ registrationForm.plainPassword.second.vars.id }}" class="form-label fw-semibold">
+                                <i class="bi bi-lock-fill me-1"></i>Repetir contraseña
+                            </label>
+                            {{ form_widget(registrationForm.plainPassword.second) }}
+                            {{ form_errors(registrationForm.plainPassword.second) }}
+                        </div>
+
+                        {{ form_errors(registrationForm) }}
+
+                        <button type="submit" class="btn btn-ferr w-100 py-2 mb-3">
+                            <i class="bi bi-person-plus me-1"></i>Crear cuenta
+                        </button>
+
+                    {{ form_end(registrationForm) }}
+
+                    <hr>
+                    <p class="text-center text-muted small mb-0">
+                        ¿Ya tienes cuenta?
+                        <a href="{{ path('app_login') }}" class="fw-semibold" style="color: var(--ferr-primary);">Iniciar sesión</a>
+                    </p>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}
