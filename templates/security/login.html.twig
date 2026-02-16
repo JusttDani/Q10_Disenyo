@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Iniciar sesión — Ferretería Q10
+{% endblock %}
+
+{% block body %}
+	<section class="container py-5 d-flex justify-content-center align-items-center" style="min-height: 60vh;" aria-label="Formulario de inicio de sesión">
+
+		<div class="card shadow border-0 rounded-4" style="max-width:420px; width:100%;">
+			<div class="card-body p-5">
+				<div class="text-center mb-4">
+					<i class="bi bi-tools display-3 text-warning" aria-hidden="true"></i>
+					<h1 class="h4 fw-bold mt-3">Iniciar sesión</h1>
+					<p class="text-muted small">Accede a tu cuenta de Ferretería Q10</p>
+				</div>
+
+				{# ── Errores de autenticación ─────────────────────────── #}
+				{% if error %}
+					<div class="alert alert-danger d-flex align-items-center" role="alert">
+						<i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
+						<div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+					</div>
+				{% endif %}
+
+				<form action="{{ path('app_login') }}" method="POST" novalidate>
+					<div class="mb-3">
+						<label for="inputEmail" class="form-label fw-semibold">Correo electrónico</label>
+						<div class="input-group">
+							<span class="input-group-text">
+								<i class="bi bi-envelope" aria-hidden="true"></i>
+							</span>
+							<input type="email" id="inputEmail" name="_username" class="form-control" value="{{ last_username }}" placeholder="tu@email.com" required autofocus autocomplete="email" aria-required="true" aria-label="Correo electrónico">
+						</div>
+					</div>
+
+					<div class="mb-4">
+						<label for="inputPassword" class="form-label fw-semibold">Contraseña</label>
+						<div class="input-group">
+							<span class="input-group-text">
+								<i class="bi bi-lock" aria-hidden="true"></i>
+							</span>
+							<input type="password" id="inputPassword" name="_password" class="form-control" placeholder="••••••••" required autocomplete="current-password" aria-required="true" aria-label="Contraseña">
+						</div>
+					</div>
+
+					{# CSRF token #}
+					<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+					<button type="submit" class="btn btn-ferr w-100 py-2 fw-semibold">
+						<i class="bi bi-box-arrow-in-right me-1" aria-hidden="true"></i>Entrar
+					</button>
+				</form>
+			</div>
+		</div>
+	</section>
+{% endblock %}

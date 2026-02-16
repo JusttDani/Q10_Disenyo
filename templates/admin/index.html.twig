@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Panel de Administración — Ferretería Q10{% endblock %}
+
+{% block body %}
+	<section class="container py-5" aria-label="Panel de administración">
+
+		<div class="d-flex justify-content-between align-items-center mb-4">
+			<h1 class="h3 fw-bold mb-0">
+				<i class="bi bi-gear me-2 text-warning" aria-hidden="true"></i>Gestión de Productos
+			</h1>
+			<a href="{{ path('admin_producto_new') }}" class="btn btn-ferr">
+				<i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Nuevo Producto
+			</a>
+		</div>
+
+		{% if productos is empty %}
+			<div class="text-center py-5">
+				<i class="bi bi-box-seam display-1 text-muted" aria-hidden="true"></i>
+				<p class="mt-3 text-muted fs-5">No hay productos registrados todavía.</p>
+				<a href="{{ path('admin_producto_new') }}" class="btn btn-ferr mt-2">Crear primer producto</a>
+			</div>
+		{% else %}
+
+			<div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+				<div class="table-responsive">
+					<table class="table table-hover align-middle mb-0" aria-label="Listado de productos">
+						<thead class="table-dark">
+							<tr>
+								<th scope="col" style="width:60px;">#</th>
+								<th scope="col" style="width:80px;">Imagen</th>
+								<th scope="col">Nombre</th>
+								<th scope="col" class="text-center">Precio</th>
+								<th scope="col" class="text-center">Stock</th>
+								<th scope="col" class="text-center" style="width:180px;">Acciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for producto in productos %}
+								<tr>
+									<td class="text-muted">{{ producto.id }}</td>
+									<td>
+										{% if producto.imagen %}
+											<img src="{{ asset('uploads/productos/' ~ producto.imagen) }}" alt="{{ producto.nombre }}" class="rounded" width="50" height="50" style="object-fit:cover;">
+										{% else %}
+											<div class="bg-light rounded d-flex align-items-center justify-content-center" style="width:50px;height:50px;">
+												<i class="bi bi-image text-muted small" aria-hidden="true"></i>
+											</div>
+										{% endif %}
+									</td>
+									<td class="fw-semibold">{{ producto.nombre }}</td>
+									<td class="text-center">{{ producto.precio|number_format(2, ',', '.') }} €</td>
+									<td class="text-center">
+										{% if producto.stock > 0 %}
+											<span class="badge bg-success">{{ producto.stock }}</span>
+										{% else %}
+											<span class="badge bg-danger">0</span>
+										{% endif %}
+									</td>
+									<td class="text-center">
+										<div class="btn-group" role="group" aria-label="Acciones para {{ producto.nombre }}">
+											<a href="{{ path('admin_producto_edit', {id: producto.id}) }}" class="btn btn-outline-primary btn-sm" aria-label="Editar {{ producto.nombre }}">
+												<i class="bi bi-pencil" aria-hidden="true"></i> Editar
+											</a>
+											<button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ producto.id }}" aria-label="Eliminar {{ producto.nombre }}">
+												<i class="bi bi-trash" aria-hidden="true"></i> Borrar
+											</button>
+										</div>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			{# ── Modales de confirmación de borrado (fuera de la tabla) ── #}
+			{% for producto in productos %}
+				<div class="modal fade" id="deleteModal{{ producto.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ producto.id }}" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-header bg-danger text-white">
+								<h5 class="modal-title" id="deleteModalLabel{{ producto.id }}">
+									Confirmar eliminación
+								</h5>
+								<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+							</div>
+							<div class="modal-body">
+								¿Estás seguro de que quieres eliminar
+								<strong>{{ producto.nombre }}</strong>?
+								Esta acción no se puede deshacer.
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+								<form action="{{ path('admin_producto_delete', {id: producto.id}) }}" method="POST" class="d-inline">
+									<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ producto.id) }}">
+									<button type="submit" class="btn btn-danger">
+										<i class="bi bi-trash me-1" aria-hidden="true"></i>Eliminar
+									</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+
+		{% endif %}
+	</section>
+{% endblock %}

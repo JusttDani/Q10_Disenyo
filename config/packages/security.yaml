@@ -1,0 +1,44 @@
+security:
+  # Algoritmo de hashing de contraseñas
+  password_hashers:
+    Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"
+
+  # Proveedor de usuarios (base de datos)
+  providers:
+    app_user_provider:
+      entity:
+        class: App\Entity\User
+        property: email
+
+  # Firewalls
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+
+    main:
+      lazy: true
+      provider: app_user_provider
+
+      # Login por formulario
+      form_login:
+        login_path: app_login
+        check_path: app_login
+        default_target_path: catalog_index
+        enable_csrf: true
+
+      # Logout
+      logout:
+        path: app_logout
+        target: catalog_index
+
+      # Recordar sesión (opcional, recomendado)
+      remember_me:
+        secret: "%kernel.secret%"
+        lifetime: 604800 # 1 semana
+
+  # Control de acceso
+  access_control:
+    - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/login, roles: PUBLIC_ACCESS }
+    - { path: ^/, roles: PUBLIC_ACCESS }

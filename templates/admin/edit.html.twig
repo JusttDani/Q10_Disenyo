@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar
+	{{ producto.nombre }}
+	— Ferretería Q10
+{% endblock %}
+
+{% block body %}
+	<section class="container py-5" style="max-width:720px;" aria-label="Formulario de edición de producto">
+
+		<nav aria-label="Ruta de navegación" class="mb-4">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a href="{{ path('admin_index') }}">Administración</a>
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">Editar:
+					{{ producto.nombre }}</li>
+			</ol>
+		</nav>
+
+		<div class="card shadow-sm border-0 rounded-3">
+			<div class="card-header bg-dark text-white">
+				<h1 class="h5 mb-0">
+					<i class="bi bi-pencil-square me-2" aria-hidden="true"></i>Editar producto
+				</h1>
+			</div>
+			<div
+				class="card-body p-4">
+
+				{# Previsualización de imagen actual #}
+				{% if producto.imagen %}
+					<div class="mb-4 text-center">
+						<p class="form-label fw-semibold">Imagen actual:</p>
+						<img src="{{ asset('uploads/productos/' ~ producto.imagen) }}" alt="Imagen actual de {{ producto.nombre }}" class="rounded shadow-sm" style="max-height:200px; object-fit:cover;">
+					</div>
+				{% endif %}
+
+				{{ form_start(form, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
+
+				<div class="mb-3">
+					{{ form_label(form.nombre, null, {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+					{{ form_widget(form.nombre) }}
+					{{ form_errors(form.nombre) }}
+				</div>
+
+				<div class="mb-3">
+					{{ form_label(form.descripcion, null, {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+					{{ form_widget(form.descripcion) }}
+					{{ form_errors(form.descripcion) }}
+				</div>
+
+				<div class="row g-3 mb-3">
+					<div class="col-md-6">
+						{{ form_label(form.precio, null, {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+						{{ form_widget(form.precio) }}
+						{{ form_errors(form.precio) }}
+					</div>
+					<div class="col-md-6">
+						{{ form_label(form.stock, null, {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+						{{ form_widget(form.stock) }}
+						{{ form_errors(form.stock) }}
+					</div>
+				</div>
+
+				<div class="mb-4">
+					{{ form_label(form.imagenFile, null, {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+					{{ form_widget(form.imagenFile) }}
+					<div class="form-text">Deja vacío para mantener la imagen actual. Formatos: JPEG, PNG, WebP, GIF. Máx. 4 MB.</div>
+					{{ form_errors(form.imagenFile) }}
+				</div>
+
+				<div class="d-flex gap-2">
+					<button type="submit" class="btn btn-ferr px-4">
+						<i class="bi bi-check-lg me-1" aria-hidden="true"></i>Actualizar producto
+					</button>
+					<a href="{{ path('admin_index') }}" class="btn btn-outline-secondary">Cancelar</a>
+				</div>
+
+				{{ form_end(form) }}
+			</div>
+		</div>
+	</section>
+{% endblock %}

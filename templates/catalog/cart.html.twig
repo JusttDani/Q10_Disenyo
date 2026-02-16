@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Carrito — Ferretería Q10
+{% endblock %}
+
+{% block body %}
+	<section class="container py-5" aria-label="Carrito de compras">
+		<h1 class="h3 fw-bold mb-4">
+			<i class="bi bi-cart3 me-2 text-warning" aria-hidden="true"></i>Tu Carrito
+		</h1>
+
+		{% if items is empty %}
+			<div class="text-center py-5">
+				<i class="bi bi-cart-x display-1 text-muted" aria-hidden="true"></i>
+				<p class="mt-3 text-muted fs-5">Tu carrito está vacío.</p>
+				<a href="{{ path('catalog_index') }}" class="btn btn-ferr mt-2">
+					<i class="bi bi-shop me-1" aria-hidden="true"></i>Ir al catálogo
+				</a>
+			</div>
+		{% else %}
+
+			<div class="table-responsive">
+				<table class="table table-hover align-middle" aria-label="Productos en el carrito">
+					<thead class="table-dark">
+						<tr>
+							<th scope="col">Producto</th>
+							<th scope="col" class="text-center">Precio ud.</th>
+							<th scope="col" class="text-center">Cantidad</th>
+							<th scope="col" class="text-center">Subtotal</th>
+							<th scope="col" class="text-center">Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in items %}
+							{% set producto = item.producto %}
+							{% set qty      = item.quantity %}
+							<tr>
+								<td>
+									<div class="d-flex align-items-center gap-3">
+										{% if producto.imagen %}
+											<img src="{{ asset('uploads/productos/' ~ producto.imagen) }}" alt="{{ producto.nombre }}" class="rounded" width="60" height="60" style="object-fit:cover;">
+										{% else %}
+											<div class="bg-light rounded d-flex align-items-center justify-content-center" style="width:60px;height:60px;">
+												<i class="bi bi-image text-muted" aria-hidden="true"></i>
+											</div>
+										{% endif %}
+										<span class="fw-semibold">{{ producto.nombre }}</span>
+									</div>
+								</td>
+								<td class="text-center">{{ producto.precio|number_format(2, ',', '.') }}
+									€</td>
+								<td class="text-center">{{ qty }}</td>
+								<td class="text-center fw-bold">{{ (producto.precio * qty)|number_format(2, ',', '.') }}
+									€</td>
+								<td class="text-center">
+									<form action="{{ path('cart_remove', {id: producto.id}) }}" method="POST">
+										<button type="submit" class="btn btn-outline-danger btn-sm" aria-label="Eliminar {{ producto.nombre }} del carrito">
+											<i class="bi bi-trash" aria-hidden="true"></i>
+										</button>
+									</form>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+					<tfoot>
+						<tr class="table-warning">
+							<td colspan="3" class="text-end fw-bold fs-5">Total:</td>
+							<td class="text-center fw-bold fs-5">{{ total|number_format(2, ',', '.') }}
+								€</td>
+							<td></td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+
+			<div class="d-flex justify-content-between mt-4">
+				<a href="{{ path('catalog_index') }}" class="btn btn-outline-secondary">
+					<i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Seguir comprando
+				</a>
+				<button class="btn btn-ferr btn-lg px-5" disabled aria-label="Finalizar compra (próximamente)">
+					<i class="bi bi-credit-card me-2" aria-hidden="true"></i>Finalizar compra
+				</button>
+			</div>
+
+		{% endif %}
+	</section>
+{% endblock %}

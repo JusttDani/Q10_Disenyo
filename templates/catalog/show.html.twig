@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ producto.nombre }}
+	— Ferretería Q10
+{% endblock %}
+
+{% block body %}
+	<section
+		class="container py-5" aria-label="Detalle de producto">
+
+		{# ── Breadcrumb ───────────────────────────────────────────────── #}
+		<nav aria-label="Ruta de navegación" class="mb-4">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a href="{{ path('catalog_index') }}">Catálogo</a>
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">{{ producto.nombre }}</li>
+			</ol>
+		</nav>
+
+		<div
+			class="row g-5">
+			{# ── Imagen ──────────────────────────────────────────────── #}
+			<div class="col-lg-6">
+				<div class="rounded-4 overflow-hidden shadow">
+					{% if producto.imagen %}
+						<img src="{{ asset('uploads/productos/' ~ producto.imagen) }}" class="img-fluid w-100" alt="Imagen de {{ producto.nombre }}" style="max-height:500px; object-fit:cover;">
+					{% else %}
+						<div class="bg-light d-flex align-items-center justify-content-center" style="height:400px;" role="img" aria-label="Sin imagen disponible">
+							<i class="bi bi-image text-muted" style="font-size:5rem;" aria-hidden="true"></i>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+
+			{# ── Info ────────────────────────────────────────────────── #}
+			<div class="col-lg-6">
+				<h1 class="h2 fw-bold mb-3">{{ producto.nombre }}</h1>
+
+				<p class="display-6 fw-bold text-warning mb-3">
+					{{ producto.precio|number_format(2, ',', '.') }}
+					€
+				</p>
+
+				{# Stock #}
+				{% if producto.stock > 0 %}
+					<p class="mb-4">
+						<span class="badge bg-success fs-6">
+							<i class="bi bi-check-circle me-1" aria-hidden="true"></i>En stock —
+							{{ producto.stock }}
+							uds.
+						</span>
+					</p>
+				{% else %}
+					<p class="mb-4">
+						<span class="badge bg-danger fs-6">
+							<i class="bi bi-x-circle me-1" aria-hidden="true"></i>Agotado
+						</span>
+					</p>
+				{% endif %}
+
+				{# Descripción #}
+				<div class="mb-4">
+					<h2 class="h5 fw-semibold">Descripción</h2>
+					<p class="text-muted lh-lg">{{ producto.descripcion|default('Sin descripción disponible.') }}</p>
+				</div>
+
+				{# Añadir al carrito #}
+				{% if producto.stock > 0 %}
+					<form action="{{ path('cart_add', {id: producto.id}) }}" method="POST" class="d-flex align-items-end gap-3">
+						<div>
+							<label for="qty" class="form-label fw-semibold">Cantidad</label>
+							<input type="number" id="qty" name="quantity" class="form-control" style="width:90px;" value="1" min="1" max="{{ producto.stock }}" aria-label="Cantidad a añadir al carrito">
+						</div>
+						<button type="submit" class="btn btn-ferr btn-lg px-4">
+							<i class="bi bi-cart-plus me-2" aria-hidden="true"></i>Añadir al carrito
+						</button>
+					</form>
+				{% endif %}
+
+				<hr class="my-4">
+
+				<a href="{{ path('catalog_index') }}" class="btn btn-outline-secondary">
+					<i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Volver al catálogo
+				</a>
+			</div>
+		</div>
+	</section>
+{% endblock %}

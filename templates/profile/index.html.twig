@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mi Cuenta — Ferretería Q10{% endblock %}
+
+{% block body %}
+<section class="container py-5" aria-label="Mi cuenta">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <h1 class="h3 fw-bold mb-4">
+                <i class="bi bi-person-gear me-2 text-warning" aria-hidden="true"></i>Mi Cuenta
+            </h1>
+
+            {# ── Información de la cuenta ─────────────────────────── #}
+            <div class="card profile-card mb-4">
+                <div class="card-body p-4">
+                    <h2 class="h5 fw-semibold mb-4">
+                        <i class="bi bi-info-circle me-2" aria-hidden="true"></i>Información
+                    </h2>
+                    <div class="row g-3">
+                        <div class="col-sm-4">
+                            <label class="form-label text-muted small fw-semibold">Email</label>
+                            <p class="fw-semibold mb-0">
+                                <i class="bi bi-envelope me-1 text-muted" aria-hidden="true"></i>{{ app.user.email }}
+                            </p>
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="form-label text-muted small fw-semibold">Rol</label>
+                            <p class="mb-0">
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <span class="badge bg-warning text-dark fs-6">
+                                        <i class="bi bi-shield-lock me-1"></i>Administrador
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-info text-dark fs-6">
+                                        <i class="bi bi-person me-1"></i>Usuario
+                                    </span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="form-label text-muted small fw-semibold">ID</label>
+                            <p class="fw-semibold mb-0 text-muted">#{{ app.user.id }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# ── Cambiar contraseña ──────────────────────────────── #}
+            <div class="card profile-card">
+                <div class="card-body p-4">
+                    <h2 class="h5 fw-semibold mb-4">
+                        <i class="bi bi-lock me-2" aria-hidden="true"></i>Cambiar Contraseña
+                    </h2>
+
+                    <form action="{{ path('app_profile_password') }}" method="POST" novalidate>
+                        <div class="mb-3">
+                            <label for="current_password" class="form-label fw-semibold">Contraseña actual</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-key" aria-hidden="true"></i></span>
+                                <input type="password" id="current_password" name="current_password"
+                                       class="form-control" required
+                                       autocomplete="current-password"
+                                       placeholder="Tu contraseña actual">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label fw-semibold">Nueva contraseña</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock" aria-hidden="true"></i></span>
+                                <input type="password" id="new_password" name="new_password"
+                                       class="form-control" required minlength="6"
+                                       autocomplete="new-password"
+                                       placeholder="Mínimo 6 caracteres">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="confirm_password" class="form-label fw-semibold">Confirmar nueva contraseña</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock-fill" aria-hidden="true"></i></span>
+                                <input type="password" id="confirm_password" name="confirm_password"
+                                       class="form-control" required minlength="6"
+                                       autocomplete="new-password"
+                                       placeholder="Repite la nueva contraseña">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-ferr px-4">
+                            <i class="bi bi-check-lg me-1" aria-hidden="true"></i>Guardar cambios
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <a href="{{ path('catalog_index') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Volver al catálogo
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}
